@@ -44,7 +44,9 @@ class Store {
   }
 
   selectItem(id) {
+    // if (id === this._state.selectedItem) this.unSelectItem();
     this._state.selectedItem = id;
+    this._callbacks.forEach(fn => fn());
   }
 
   // unSelectItem() {
