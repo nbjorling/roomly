@@ -1,20 +1,21 @@
-import React from "react";
+import React, { useEffect, useState }from "react";
 import Sketch from "react-p5";
 
-let x = 50;
-let y = 50;
 const canvasWidth = 2000;
 const canvasHeight = 2000;
 
-const Canvas = () => {
+const Canvas = ({ store, storeState }) => {
+
 
   const setup = (p5, canvasParentRef) => {
 		// use parent to render the canvas in this ref
-		// (without that p5 will render the canvas outside of your component)
+		// (without that p5 will render the canvas outside of the component)
 		p5.createCanvas(canvasWidth, canvasHeight).parent(canvasParentRef);
 	};
 
   const drawGrid = (p5, spacing) => {
+    p5.stroke(220,220,180);
+
     const nVerticalLines = canvasWidth / spacing;
     let verticalLines = [];
     for (let i = 0; i < nVerticalLines; i++) {
@@ -32,26 +33,30 @@ const Canvas = () => {
     }
   }
 
-  function doubleClick(event) {
-    const x = event.mouseX;
-    const y = event.mouseY;
+  function doubleClick(p5) {
+    const mx = p5.mouseX;
+    const my = p5.mouseY;
 
-    console.log("FOO DubbelKlick", x, y)
+    store.showFurnitureInputBox(mx, my);
   }
 
 	const draw = (p5) => {
-		p5.background(255,255,255);
-		p5.ellipse(x, y, 70, 70);
-    drawGrid(p5, 50);
+    p5.background(255,255,255);
+    drawGrid(p5, 25);
+
+    storeState.furnitures && storeState.furnitures.forEach(furniture => {
+      p5.fill(furniture.color);
+      p5.rect(furniture.x, furniture.y, furniture.width, furniture.height);
+    })
+
 		// NOTE: Do not use setState in the draw function or in functions that are executed
 		// in the draw function...
 		// please use normal variables or class properties for these purposes
-		x++;
 	};
 
   return (
     <div className="canvas-container">
-      <Sketch setup={setup} draw={draw} doubleClicked={(event) => doubleClick(event)}/>;
+      <Sketch setup={setup} draw={draw} doubleClicked={(p5) => doubleClick(p5)} />;
     </div>
   );
 }

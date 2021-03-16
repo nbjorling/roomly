@@ -1,18 +1,27 @@
+import React, { useState, useEffect } from 'react';
 import LeftBar from './components/LeftBar.jsx';
-import BottomBar from './components/BottomBar.jsx';
+import Overlay from './components/Overlay.jsx';
 import RightBar from './components/RightBar.jsx';
 import Canvas from './components/Canvas.jsx';
-import './App.css';
+import './App.scss';
 import './styling/bars.scss';
 import './styling/canvas.scss';
 
-function App() {
+function App({ store }) {
+  const [storeState, setStoreState] = useState(store.getState());
+
+  useEffect(() => {
+    const fn = () => setStoreState(store.getState());
+    store.onUpdate(fn);
+    return () => store.offUpdate(fn);
+  });
+
   return (
     <div className="App">
-      <LeftBar></LeftBar>
-      {/* <BottomBar></BottomBar> */}
-      <RightBar></RightBar>
-      <Canvas></Canvas>
+      {storeState.showInputBox ? <Overlay store={store} /> : null}
+      {/* <LeftBar></LeftBar>
+      <RightBar></RightBar> */}
+      <Canvas store={store} storeState={storeState} ></Canvas>
     </div>
   );
 }
