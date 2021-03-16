@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import LeftBar from './components/LeftBar.jsx';
 import BottomBar from './components/BottomBar.jsx';
 import RightBar from './components/RightBar.jsx';

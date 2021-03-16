@@ -1,8 +1,11 @@
+$bar-width: 50px;
+
+
 .canvas-container {
   background: blue;
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100vw;
+  left: $bar-width;
+  width: calc(100vw - (#{$bar-width} * 2));
   height: 100vh;
 }
