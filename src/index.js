@@ -3,9 +3,12 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App.jsx';
 import reportWebVitals from './reportWebVitals';
+import { v4 as uuidv4 } from 'uuid';
+
 
 class Furniture {
-  constructor(title, color, x, y, width, height) {
+  constructor({ id, title, color, x, y, width, height }) {
+    this.id = id;
     this.title = title;
     this.color = color;
     this.x = x;
@@ -22,11 +25,12 @@ class Store {
     this._state = {
       elements: [],
       furnitures: JSON.parse(localStorage.getItem('roomlyFurnitures')) || [],
-      selected: null,
+      selectedItem: null,
       showInputBox: false,
       mouseCoordinates: {x: 0, y: 0}
     };
   }
+
   onUpdate(fn) {
     this._callbacks.add(fn);
   }
@@ -36,25 +40,23 @@ class Store {
   }
 
   getState() {
-    console.log("Got state");
     return Object.assign({}, this._state);
   }
 
-  // selectElement(item) {
-  //   this._state.selected = item;
-  //   this._callbacks.forEach(fn => fn());
-  // }
+  selectItem(id) {
+    this._state.selectedItem = id;
+  }
 
-  // unSelectElement() {
+  // unSelectItem() {
   //   this._state.selected = null;
   //   this._callbacks.forEach(fn => fn());
   // }
 
   createFurniture({ title, color, width, height }) {
     let furnitures = this._state.furnitures;
-
+    const newId = uuidv4();
     furnitures.push(
-      new Furniture(title, color, this._state.mouseCoordinates.x, this._state.mouseCoordinates.y, width, height)
+      new Furniture({ id: newId, title: title, x: this._state.mouseCoordinates.x, y: this._state.mouseCoordinates.y, color: color, width: width, height: height })
     );
     this._state.showInputBox = false;
     this._callbacks.forEach(fn => fn());
