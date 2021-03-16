@@ -1,0 +1,30 @@
+$bar-width: 50px;
+
+.bar-container {
+  position: absolute;
+  z-index: 100;
+
+  &.bar-container--left {
+    background: purple;
+    top: 0;
+    left: 0;
+    width: $bar-width;
+    height: 100vh;
+  }
+
+  &.bar-container--right {
+    background: green;
+    top: 0;
+    right: 0;
+    width: $bar-width;
+    height: 100vh;
+  }
+
+  &.bar-container--bottom {
+    background: red;
+    bottom: 0;
+    left: $bar-width;
+    width: calc(100vw - (#{$bar-width} * 2));
+    min-height: 100px;
+  }
+}
