@@ -21,13 +21,12 @@ class Store {
     this._callbacks = new Set();
     this._state = {
       elements: [],
-      furnitures: [],
+      furnitures: JSON.parse(localStorage.getItem('roomlyFurnitures')) || [],
       selected: null,
       showInputBox: false,
       mouseCoordinates: {x: 0, y: 0}
     };
   }
-
   onUpdate(fn) {
     this._callbacks.add(fn);
   }
@@ -59,6 +58,7 @@ class Store {
     );
     this._state.showInputBox = false;
     this._callbacks.forEach(fn => fn());
+    localStorage.setItem('roomlyFurnitures', JSON.stringify(this._state.furnitures));
   }
 
   showFurnitureInputBox(mx, my) {

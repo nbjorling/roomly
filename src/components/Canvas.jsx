@@ -1,11 +1,10 @@
-import React, { useEffect, useState }from "react";
+import React from "react";
 import Sketch from "react-p5";
 
 const canvasWidth = 2000;
 const canvasHeight = 2000;
 
 const Canvas = ({ store, storeState }) => {
-
 
   const setup = (p5, canvasParentRef) => {
 		// use parent to render the canvas in this ref
@@ -44,11 +43,10 @@ const Canvas = ({ store, storeState }) => {
     p5.background(255,255,255);
     drawGrid(p5, 25);
 
-    storeState.furnitures && storeState.furnitures.forEach(furniture => {
+   storeState.furnitures.forEach(furniture => {
       p5.fill(furniture.color);
       p5.rect(furniture.x, furniture.y, furniture.width, furniture.height);
     })
-
 		// NOTE: Do not use setState in the draw function or in functions that are executed
 		// in the draw function...
 		// please use normal variables or class properties for these purposes
