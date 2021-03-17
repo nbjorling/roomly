@@ -2,10 +2,24 @@ $bar-width: 50px;
 
 
 .canvas-container {
-  background: blue;
+  // background: blue;
   position: absolute;
   top: 0;
-  left: $bar-width;
-  width: calc(100vw - (#{$bar-width} * 2));
+  left: 0;
+  width: 100vw;
   height: 100vh;
+
+  .furniture-element {
+    position: absolute;
+    z-index: 100;
+    display: flex;
+    cursor: pointer;
+
+    p {
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: auto;
+      margin-bottom: auto;
+    }
+  }
 }
