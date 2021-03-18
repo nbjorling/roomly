@@ -19,8 +19,8 @@ function App({ store }) {
   return (
     <div className="App">
       {store._state.showInputBox ? <Overlay store={store} /> : null}
-      {/* <LeftBar></LeftBar>
-      <RightBar></RightBar> */}
+      {/* <LeftBar></LeftBar> */}
+      <RightBar></RightBar>
       <Canvas store={store} storeState={storeState}></Canvas>
     </div>
   );

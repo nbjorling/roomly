@@ -6,9 +6,6 @@ import {useDroppable} from '@dnd-kit/core';
 import {useDraggable} from '@dnd-kit/core';
 
 
-const canvasWidth = 2000;
-const canvasHeight = 2000;
-
 const Canvas = ({ store, storeState }) => {
   const [isDropped, setIsDropped] = useState(false);
 
@@ -40,8 +37,10 @@ const Canvas = ({ store, storeState }) => {
       id: props.id,
     });
 
+    const { calculatedX, calculatedY } = transform ? store.calculateCoordinates(transform.x, transform.y) : { calculatedX: 0, calculatedY : 0 }
+
     const style = transform ? {
-      transform: `translate3d(${props.x + transform.x}px, ${props.y + transform.y}px, 0)`, backgroundColor: props.color, width: props.width + "px", height: props.height + "px", outline: props.isSelected ? "5px solid orange" : "none"
+      transform: `translate3d(${props.x + calculatedX}px, ${props.y + calculatedY}px, 0)`, backgroundColor: props.color, width: props.width + "px", height: props.height + "px", outline: props.isSelected ? "5px solid orange" : "none"
     } : {
       transform: `translate3d(${props.x}px, ${props.y}px, 0)`, backgroundColor: props.color, width: props.width + "px", height: props.height + "px", outline: props.isSelected ? "5px solid orange" : "none"
     };
@@ -57,8 +56,11 @@ const Canvas = ({ store, storeState }) => {
     const x = event.delta.x;
     const y = event.delta.y;
     const id = event.active.id;
+
+    const { calculatedX, calculatedY } = store.calculateCoordinates(x, y)
+
     setIsDropped(true);
-    store.setFurniturePosition(id, x, y)
+    store.setFurniturePosition(id, calculatedX, calculatedY)
   }
 
   return (

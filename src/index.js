@@ -26,7 +26,8 @@ class Store {
       furnitures:  this._getFromLocalStorate() || [],
       selectedItem: null,
       showInputBox: false,
-      mouseCoordinates: {x: 0, y: 0}
+      mouseCoordinates: {x: 0, y: 0},
+      canvasScale: 0.5
     };
   }
 
@@ -74,6 +75,12 @@ class Store {
     this._state.furnitures = newItems;
     this._saveToLocalStorage();
     this._triggerCallbacks();
+  }
+
+  calculateCoordinates(x, y) {
+    const calculatedX = x / this._state.canvasScale;
+    const calculatedY = y / this._state.canvasScale;
+    return { calculatedX: calculatedX, calculatedY: calculatedY }
   }
 
   createFurniture({ title, color, width, height }) {
