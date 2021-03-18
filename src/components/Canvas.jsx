@@ -26,21 +26,16 @@ const Canvas = ({ store, storeState }) => {
   });
 
   function Droppable(props) {
-    const {isOver, setNodeRef} = useDroppable({
+    const {setNodeRef} = useDroppable({
       id: 'droppable',
     });
-    const style = {
-      color: isOver ? 'green' : undefined,
-    };
-
 
     return (
-      <div ref={setNodeRef} style={style} className="dnd-container">
+      <div ref={setNodeRef} className="dnd-container">
         {props.children}
       </div>
     );
   }
-
 
   function Draggable(props) {
     const {attributes, listeners, setNodeRef, transform} = useDraggable({
@@ -61,19 +56,11 @@ const Canvas = ({ store, storeState }) => {
   }
 
   function handleDragEnd(event) {
-    if (event.over && event.over.id === 'droppable') {
-      const x = event.delta.x;
-      const y = event.delta.y;
-      const id = event.active.id;
-
-
-      console.log(x);
-      console.log(y);
-      console.log(id);
-      console.log(event);
-      setIsDropped(true);
-      store.setFurniturePosition(id, x, y)
-    }
+    const x = event.delta.x;
+    const y = event.delta.y;
+    const id = event.active.id;
+    setIsDropped(true);
+    store.setFurniturePosition(id, x, y)
   }
 
   return (
