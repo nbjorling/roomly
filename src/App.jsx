@@ -14,14 +14,14 @@ function App({ store }) {
     const fn = () => setStoreState(store.getState());
     store.onUpdate(fn);
     return () => store.offUpdate(fn);
-  });
+  }, [store]);
 
   return (
     <div className="App">
-      {storeState.showInputBox ? <Overlay store={store} /> : null}
+      {store._state.showInputBox ? <Overlay store={store} /> : null}
       {/* <LeftBar></LeftBar>
       <RightBar></RightBar> */}
-      <Canvas store={store} storeState={storeState} ></Canvas>
+      <Canvas store={store} storeState={storeState}></Canvas>
     </div>
   );
 }

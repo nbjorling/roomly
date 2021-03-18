@@ -1,65 +1,87 @@
-import React from "react";
+import React, { useState } from "react";
 import Sketch from "react-p5";
+
+import {DndContext} from '@dnd-kit/core';
+import {useDroppable} from '@dnd-kit/core';
+import {useDraggable} from '@dnd-kit/core';
+
 
 const canvasWidth = 2000;
 const canvasHeight = 2000;
 
 const Canvas = ({ store, storeState }) => {
+  const [isDropped, setIsDropped] = useState(false);
 
-  const setup = (p5, canvasParentRef) => {
-		// use parent to render the canvas in this ref
-		// (without that p5 will render the canvas outside of the component)
-		p5.createCanvas(canvasWidth, canvasHeight).parent(canvasParentRef);
-	};
-
-  const drawGrid = (p5, spacing) => {
-    p5.stroke(220,220,180);
-
-    const nVerticalLines = canvasWidth / spacing;
-    let verticalLines = [];
-    for (let i = 0; i < nVerticalLines; i++) {
-      verticalLines.push(
-        p5.line(i * spacing, 0, i * spacing, canvasWidth)
-      );
-    }
-
-    const nHorizontalLines = canvasWidth / spacing;
-    let HorizontalLines = [];
-    for (let i = 0; i < nHorizontalLines; i++) {
-      HorizontalLines.push(
-        p5.line(0, i * spacing, canvasHeight, i * spacing)
-      );
-    }
-  }
-
-  function doubleClick(p5) {
-    const mx = p5.mouseX;
-    const my = p5.mouseY;
-
-    store.showFurnitureInputBox(mx, my);
-  }
-
-	const draw = (p5) => {
-    p5.background(255,255,255);
-    drawGrid(p5, 25);
-	};
-
-  const furnitureElements = storeState.furnitures.map(furniture => {
+  const draggables = storeState.furnitures.map(furniture => {
     const isSelected = storeState.selectedItem === furniture.id;
     return (
-      <div className="furniture-element" key={furniture.id} onClick={() => store.selectItem(furniture.id)}style={{ backgroundColor: furniture.color, width: furniture.width + "px", height: furniture.height + "px", left: furniture.x, top: furniture.y, outline: isSelected ? "5px solid orange" : "none" }}>
-        <p>
-          {furniture.title}
-        </p>
-      </div>
+      <Draggable key={furniture.id} id={furniture.id} x={furniture.x} y={furniture.y} color={furniture.color} width={furniture.width} height={furniture.height} isSelected={isSelected}>
+        <div className="furniture-element">
+          <p>
+            {furniture.title}
+          </p>
+        </div>
+      </Draggable>
       )
-  })
+  });
+
+  function Droppable(props) {
+    const {isOver, setNodeRef} = useDroppable({
+      id: 'droppable',
+    });
+    const style = {
+      color: isOver ? 'green' : undefined,
+    };
+
+
+    return (
+      <div ref={setNodeRef} style={style} className="dnd-container">
+        {props.children}
+      </div>
+    );
+  }
+
+
+  function Draggable(props) {
+    const {attributes, listeners, setNodeRef, transform} = useDraggable({
+      id: props.id,
+    });
+
+    const style = transform ? {
+      transform: `translate3d(${props.x + transform.x}px, ${props.y + transform.y}px, 0)`, backgroundColor: props.color, width: props.width + "px", height: props.height + "px", outline: props.isSelected ? "5px solid orange" : "none"
+    } : {
+      transform: `translate3d(${props.x}px, ${props.y}px, 0)`, backgroundColor: props.color, width: props.width + "px", height: props.height + "px", outline: props.isSelected ? "5px solid orange" : "none"
+    };
+
+    return (
+      <div ref={setNodeRef} className="furniture-test" style={style} {...listeners} {...attributes}>
+        {props.children}
+      </div>
+    );
+  }
+
+  function handleDragEnd(event) {
+    if (event.over && event.over.id === 'droppable') {
+      const x = event.delta.x;
+      const y = event.delta.y;
+      const id = event.active.id;
+
+
+      console.log(x);
+      console.log(y);
+      console.log(id);
+      console.log(event);
+      setIsDropped(true);
+      store.setFurniturePosition(id, x, y)
+    }
+  }
 
   return (
-    <div className="canvas-container">
-      {furnitureElements}
-      <Sketch setup={setup} draw={draw} doubleClicked={(p5) => doubleClick(p5)} />;
-    </div>
+    <DndContext onDragEnd={handleDragEnd}>
+      <Droppable>
+        {draggables}
+      </Droppable>
+    </DndContext>
   );
 }
 

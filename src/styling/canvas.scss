@@ -1,25 +1,34 @@
 $bar-width: 50px;
 
 
-.canvas-container {
-  // background: blue;
+
+.furniture-test {
   position: absolute;
+  z-index: 100;
+  // left: 400px;
+  // top: 400px;
+}
+
+.dnd-container {
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 2000px;
+  height: 2000px;
+  background-color: darkslategray;
+  z-index: -1;
+}
 
-  .furniture-element {
-    position: absolute;
-    z-index: 100;
-    display: flex;
-    cursor: pointer;
+.furniture-element {
+  position: absolute;
+  z-index: 100;
+  display: flex;
+  cursor: pointer;
 
-    p {
-      margin-left: auto;
-      margin-right: auto;
-      margin-top: auto;
-      margin-bottom: auto;
-    }
+  p {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
   }
 }
