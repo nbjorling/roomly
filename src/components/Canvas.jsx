@@ -16,11 +16,9 @@ const Canvas = ({ store, storeState }) => {
     const isSelected = storeState.selectedItem === furniture.id;
     return (
       <Draggable key={furniture.id} id={furniture.id} x={furniture.x} y={furniture.y} color={furniture.color} width={furniture.width} height={furniture.height} isSelected={isSelected}>
-        <div className="furniture-element">
           <p>
             {furniture.title}
           </p>
-        </div>
       </Draggable>
       )
   });
@@ -49,7 +47,7 @@ const Canvas = ({ store, storeState }) => {
     };
 
     return (
-      <div ref={setNodeRef} className="furniture-test" style={style} {...listeners} {...attributes}>
+      <div ref={setNodeRef} className="furniture-element" style={style} {...listeners} {...attributes}>
         {props.children}
       </div>
     );
