@@ -1,11 +1,10 @@
-import React, { useState } from "react";
-import Sketch from "react-p5";
+import React from "react";
 
 import {DndContext} from '@dnd-kit/core';
 import {useDroppable} from '@dnd-kit/core';
 import {useDraggable} from '@dnd-kit/core';
 
-const Canvas = ({ store, storeState }) => {
+const Canvas = ({ store, storeState, canvasX, canvasY }) => {
   const draggables = storeState.furnitures.map(furniture => {
     const isSelected = storeState.selectedItem === furniture.id;
     return (

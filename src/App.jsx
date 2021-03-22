@@ -11,7 +11,7 @@ import Hammer from 'hammerjs';
 
 function App({ store }) {
   const [storeState, setStoreState] = useState(store.getState());
-  const myBlock = useRef(null);
+  const viewport = useRef(null);
   const statusBar = useRef(null);
 
   useEffect(() => {
@@ -21,56 +21,35 @@ function App({ store }) {
   }, [store]);
 
   React.useLayoutEffect(() => {
-    if (myBlock.current) {
-      // create a simple instance on our object
-      var mc = new Hammer(myBlock.current);
+    if (viewport.current) {
+      var mc = new Hammer(viewport.current);
 
-      // add a "PAN" recognizer to it (all directions)
       mc.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }) );
 
-      // tie in the handler that will be called
       mc.on("pan", handleDrag);
 
-      // poor choice here, but to keep it simple
-      // setting up a few vars to keep track of things.
-      // at issue is these values need to be encapsulated
-      // in some scope other than global.
       var lastPosX = 0;
       var lastPosY = 0;
       var isDragging = false;
       function handleDrag(ev) {
-
-        // for convience, let's get a reference to our object
         var elem = ev.target;
 
-        // DRAG STARTED
-        // here, let's snag the current position
-        // and keep track of the fact that we're dragging
         if ( ! isDragging ) {
           isDragging = true;
           lastPosX = elem.offsetLeft;
           lastPosY = elem.offsetTop;
           setStatus("Moving Viewport");
-
         }
 
-        // we simply need to determine where the x,y of this
-        // object is relative to where it's "last" known position is
-        // NOTE:
-        //    deltaX and deltaY are cumulative
-        // Thus we need to always calculate 'real x and y' relative
-        // to the "lastPosX/Y"
         var posX = ev.deltaX + lastPosX;
         var posY = ev.deltaY + lastPosY;
 
-        // move our element to that position
         elem.style.left = posX + "px";
         elem.style.top = posY + "px";
 
-        // DRAG ENDED
-        // this is where we simply forget we are dragging
         if (ev.isFinal) {
           isDragging = false;
+          store.setCanvasCoordinates(storeState.canvasCoordinates.x + posX, storeState.canvasCoordinates.y + posY);
           setStatus("End Moving Viewport");
         }
       }
@@ -88,11 +67,11 @@ function App({ store }) {
       <div className="logo">
         <img src={logo} alt="logo" />
       </div>
-      {/* <LeftBar></LeftBar> */}
+      <LeftBar></LeftBar>
       <div id="status" ref={statusBar}>Status</div>
       <RightBar></RightBar>
-      <div id="viewport" ref={myBlock}>
-        <Canvas store={store} storeState={storeState}></Canvas>
+      <div id="viewport" ref={viewport} style={{transform: `translate3d(${storeState.canvasCoordinates.x}px, ${storeState.canvasCoordinates.y}px, 0)`}}>
+        <Canvas store={store} storeState={storeState} canvasX={storeState.canvasCoordinates.x} canvasY={storeState.canvasCoordinates.y}></Canvas>
       </div>
     </div>
   );

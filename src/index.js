@@ -78,6 +78,11 @@ class Store {
     this._triggerCallbacks();
   }
 
+  setCanvasCoordinates(posX, posY) {
+    this._state.canvasCoordinates = { x: posX, y: posY };
+    this._triggerCallbacks();
+  }
+
   calculateCoordinates(x, y) {
     const calculatedX = x / this._state.canvasScale;
     const calculatedY = y / this._state.canvasScale;
