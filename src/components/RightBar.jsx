@@ -2,7 +2,8 @@
 const RightBar = () => {
   return (
     <div className="bar-container bar-container--right">
-      RightBar
+      <div className="section">Top</div>
+      <div className="section">Middle</div>
     </div>
   );
 }

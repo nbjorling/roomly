@@ -8,7 +8,7 @@ $bar-width: 50px;
   cursor: pointer;
 
   p {
-    font-size: 48px;
+    font-size: 100px;
     padding: 4px;
     border-radius: 4px;
     background: rgba(255,255,255, 0.5);
@@ -25,5 +25,4 @@ $bar-width: 50px;
   background-color: darkslategray;
   z-index: -1;
   transform-origin: top left;
-  transform: scale(0.5);
 }
