@@ -7,8 +7,6 @@ import {useDraggable} from '@dnd-kit/core';
 
 
 const Canvas = ({ store, storeState }) => {
-  const [isDropped, setIsDropped] = useState(false);
-
   const draggables = storeState.furnitures.map(furniture => {
     const isSelected = storeState.selectedItem === furniture.id;
     return (
@@ -26,7 +24,7 @@ const Canvas = ({ store, storeState }) => {
     });
 
     return (
-      <div ref={setNodeRef} className="dnd-container">
+      <div ref={setNodeRef} className="dnd-container" style={{transform: 'scale(' + storeState.canvasScale + ')'}}>
         {props.children}
       </div>
     );
@@ -59,7 +57,6 @@ const Canvas = ({ store, storeState }) => {
 
     const { calculatedX, calculatedY } = store.calculateCoordinates(x, y)
 
-    setIsDropped(true);
     store.setFurniturePosition(id, calculatedX, calculatedY)
   }
 

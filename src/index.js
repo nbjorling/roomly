@@ -26,8 +26,9 @@ class Store {
       furnitures:  this._getFromLocalStorate() || [],
       selectedItem: null,
       showInputBox: false,
-      mouseCoordinates: {x: 0, y: 0},
-      canvasScale: 0.5
+      mouseCoordinates: { x: 0, y: 0 },
+      canvasScale: 0.1,
+      canvasCoordinates: { x: 0, y: 0}
     };
   }
 
@@ -46,7 +47,7 @@ class Store {
 
   selectItem(id) {
     this._state.selectedItem = id;
-    // this._callbacks.forEach(fn => fn());
+    this._callbacks.forEach(fn => fn());
   }
 
   _triggerCallbacks() {
