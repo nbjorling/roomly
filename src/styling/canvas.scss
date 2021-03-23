@@ -1,20 +1,6 @@
 $bar-width: 50px;
 
-.furniture-element {
-  position: absolute;
-  z-index: 100;
-  border-radius: 10px;
-  display: flex;
-  cursor: pointer;
 
-  p {
-    font-size: 100px;
-    padding: 4px;
-    border-radius: 4px;
-    background: rgba(255,255,255, 0.5);
-    margin: auto;
-  }
-}
 
 .dnd-container {
   position: fixed;
@@ -22,7 +8,24 @@ $bar-width: 50px;
   left: 0;
   width: 7000px;
   height: 7000px;
-  background-color: darkslategray;
-  z-index: -1;
+  z-index: 0;
   transform-origin: top left;
+  pointer-events: none;
+
+  .furniture-element {
+    position: absolute;
+    z-index: 100;
+    border-radius: 10px;
+    display: flex;
+    cursor: pointer;
+    pointer-events: all;
+
+    p {
+      font-size: 100px;
+      padding: 4px;
+      border-radius: 4px;
+      background: rgba(255,255,255, 0.5);
+      margin: auto;
+    }
+  }
 }

@@ -4,7 +4,7 @@ import {DndContext} from '@dnd-kit/core';
 import {useDroppable} from '@dnd-kit/core';
 import {useDraggable} from '@dnd-kit/core';
 
-const Canvas = ({ store, storeState, canvasX, canvasY }) => {
+const Canvas = ({ store, storeState }) => {
   const draggables = storeState.furnitures.map(furniture => {
     const isSelected = storeState.selectedItem === furniture.id;
     return (

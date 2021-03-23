@@ -34,23 +34,25 @@ function App({ store }) {
       function handleDrag(ev) {
         var elem = ev.target;
 
-        if ( ! isDragging ) {
-          isDragging = true;
-          lastPosX = elem.offsetLeft;
-          lastPosY = elem.offsetTop;
-          setStatus("Moving Viewport");
-        }
+        if(ev.srcEvent.target.id === "camera") {
+          if (isDragging) {
+            isDragging = true;
+            lastPosX = elem.offsetLeft;
+            lastPosY = elem.offsetTop;
+            setStatus("Moving Viewport");
+          }
 
-        var posX = ev.deltaX + lastPosX;
-        var posY = ev.deltaY + lastPosY;
+          var posX = ev.deltaX + lastPosX;
+          var posY = ev.deltaY + lastPosY;
 
-        elem.style.left = posX + "px";
-        elem.style.top = posY + "px";
-
-        if (ev.isFinal) {
-          isDragging = false;
-          store.setCanvasCoordinates(storeState.canvasCoordinates.x + posX, storeState.canvasCoordinates.y + posY);
-          setStatus("End Moving Viewport");
+          // elem.style.left = posX + "px";
+          // elem.style.top = posY + "px";
+          elem.style.transform = `translate(${storeState.canvasCoordinates.x + posX}px, ${storeState.canvasCoordinates.y + posY}px)`
+          if (ev.isFinal) {
+            isDragging = false;
+            store.setCanvasCoordinates(storeState.canvasCoordinates.x + posX, storeState.canvasCoordinates.y + posY);
+            setStatus("End Moving Viewport");
+          }
         }
       }
 
@@ -67,11 +69,12 @@ function App({ store }) {
       <div className="logo">
         <img src={logo} alt="logo" />
       </div>
-      <LeftBar></LeftBar>
+      {/* <LeftBar></LeftBar> */}
       <div id="status" ref={statusBar}>Status</div>
       <RightBar></RightBar>
-      <div id="viewport" ref={viewport} style={{transform: `translate3d(${storeState.canvasCoordinates.x}px, ${storeState.canvasCoordinates.y}px, 0)`}}>
-        <Canvas store={store} storeState={storeState} canvasX={storeState.canvasCoordinates.x} canvasY={storeState.canvasCoordinates.y}></Canvas>
+      <div id="camera" ref={viewport} style={{transform: `translate3d(${storeState.canvasCoordinates.x}px, ${storeState.canvasCoordinates.y}px, 0)`}}>
+      {/* <div id="camera" ref={viewport} style={{left: storeState.canvasCoordinates.x + "px", top: storeState.canvasCoordinates.y + "px"}}> */}
+        <Canvas store={store} storeState={storeState}></Canvas>
       </div>
     </div>
   );
