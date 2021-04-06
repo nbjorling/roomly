@@ -5,15 +5,68 @@ import App from './App.jsx';
 import reportWebVitals from './reportWebVitals';
 import { v4 as uuidv4 } from 'uuid';
 
+const DATAPOINTS = {
+  FURNITURES: 'roomlyFurnitures',
+  WALLS: 'roomlyWalls',
+  ROOMS: 'roomlyRooms',
+}
+
 class Furniture {
-  constructor({ id, title, color, x, y, width, height }) {
+  constructor({ id, title, color, x, y, width, height, rotation }) {
     this.id = id;
     this.title = title;
     this.color = color;
+    this.rotation = rotation || 0;
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
+  }
+}
+
+class Wall {
+  constructor({ id, title, x, y, width, height, wallWidth }) {
+    this.id = id;
+    this.title = title;
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.wallWidth = wallWidth || 100;
+    this.windows = {};
+    this.doors = {};
+    this.opening = {};
+  }
+}
+class Room {
+  constructor({ id, title, x, y, width, height, wallWidth }) {
+    this.id = id;
+    this.title = title;
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.wallWidth = wallWidth || 100;
+    this.windows = {};
+    this.doors = {};
+    this.opening = {};
+  }
+}
+
+class Window {
+  constructor({ id, width, title }) {
+    this.id = id;
+    this.title = title || "Window";
+    this.width = width;
+  }
+}
+
+class Door {
+  constructor({ id, width, title }) {
+    this.id = id;
+    this.title = title || "Door";
+    this.width = width;
+    this.openingSide = "left";
   }
 }
 
@@ -23,7 +76,9 @@ class Store {
     this._callbacks = new Set();
     this._state = {
       elements: [],
-      furnitures:  this._getFromLocalStorate() || [],
+      furnitures:  this._getFromLocalStorate(DATAPOINTS.FURNITURES) || [],
+      walls: this._getFromLocalStorate(DATAPOINTS.WALLS) || [],
+      rooms: this._getFromLocalStorate(DATAPOINTS.ROOMS) || [],
       selectedItem: null,
       showInputBox: false,
       mouseCoordinates: { x: 0, y: 0 },
@@ -51,17 +106,15 @@ class Store {
   }
 
   _triggerCallbacks() {
-    console.log(JSON.stringify(this._state.furnitures))
-
     this._callbacks.forEach(fn => fn());
   }
 
-  _saveToLocalStorage() {
-    localStorage.setItem('roomlyFurnitures', JSON.stringify(this._state.furnitures));
+  _saveToLocalStorage(datapoint, state) {
+    localStorage.setItem(datapoint, JSON.stringify(state));
   }
 
-  _getFromLocalStorate() {
-    return JSON.parse(localStorage.getItem('roomlyFurnitures'))
+  _getFromLocalStorate(datapoint) {
+    return JSON.parse(localStorage.getItem(datapoint))
   }
 
   setFurniturePosition(id, x, y) {
@@ -74,7 +127,7 @@ class Store {
 
 
     this._state.furnitures = newItems;
-    this._saveToLocalStorage();
+    this._saveToLocalStorage(DATAPOINTS.FURNITURES,  this._state.furnitures);
     this._triggerCallbacks();
   }
 
@@ -97,7 +150,19 @@ class Store {
       new Furniture({ id: newId, title: title, x: this._state.mouseCoordinates.x, y: this._state.mouseCoordinates.y, color: color, width: width, height: height })
     );
     this._state.showInputBox = false;
-    this._saveToLocalStorage();
+    this._saveToLocalStorage(DATAPOINTS.FURNITURES, this._state.furnitures);
+    this._triggerCallbacks();
+  }
+
+  createRoom({ title, color, width, height }) {
+    console.log("Create new room");
+    let rooms = this._state.rooms;
+    const newId = uuidv4();
+    rooms.push(
+      new Room({ id: newId, title: title, x: this._state.mouseCoordinates.x, y: this._state.mouseCoordinates.y, color: color, width: width, height: height })
+    );
+    this._state.showInputBox = false;
+    this._saveToLocalStorage(DATAPOINTS.ROOMS, this._state.rooms);
     this._triggerCallbacks();
   }
 
@@ -117,6 +182,7 @@ class Store {
 const store = new Store();
 
 window.createFurniture = ((e) => store.createFurniture(e));
+window.createRoom = ((e) => store.createRoom(e));
 
 ReactDOM.render(
   <React.StrictMode>
