@@ -4,49 +4,52 @@ import {DndContext} from '@dnd-kit/core';
 import {useDroppable} from '@dnd-kit/core';
 import {useDraggable} from '@dnd-kit/core';
 
-const Canvas = ({ store, storeState }) => {
-  const draggables = storeState.furnitures.map(furniture => {
-    const isSelected = storeState.selectedItem === furniture.id;
+function Draggable({ ...props }) {
+  const {attributes, listeners, setNodeRef, transform} = useDraggable({
+    id: props.id,
+  });
+
+  const { calculatedX, calculatedY } = transform ? props.store.calculateCoordinates(transform.x, transform.y) : { calculatedX: 0, calculatedY : 0 }
+
+  const style = transform ? {
+    transform: `translate3d(${props.x + calculatedX}px, ${props.y + calculatedY}px, 0)`, backgroundColor: props.color, width: props.width + "px", height: props.height + "px", outline: props.isSelected ? "5px solid orange" : "none"
+  } : {
+    transform: `translate3d(${props.x}px, ${props.y}px, 0)`, backgroundColor: props.color, width: props.width + "px", height: props.height + "px", outline: props.isSelected ? "5px solid orange" : "none"
+  };
+
+  return (
+    <div ref={setNodeRef} className={props.className} style={style} {...listeners} {...attributes}>
+      {props.children}
+    </div>
+  );
+}
+
+function Droppable({ ...props }) {
+  const {setNodeRef} = useDroppable({
+    id: 'droppable',
+  });
+
+  return (
+    <div ref={setNodeRef} className="dnd-container" style={{transform: 'scale(' + props.storeState.canvasScale + ')'}}>
+      {props.children}
+    </div>
+  );
+}
+
+const Items = ({ items, className, store, storeState }) => {
+  return items.map(item => {
+    const isSelected = storeState.selectedItem === item.id;
     return (
-      <Draggable key={furniture.id} id={furniture.id} x={furniture.x} y={furniture.y} color={furniture.color} width={furniture.width} height={furniture.height} isSelected={isSelected}>
+      <Draggable key={item.id} id={item.id} className={className} x={item.x} y={item.y} color={item.color} width={item.width} height={item.height} isSelected={isSelected} store={store}>
           <p>
-            {furniture.title}
+            {item.title}
           </p>
       </Draggable>
       )
   });
+}
 
-  function Droppable(props) {
-    const {setNodeRef} = useDroppable({
-      id: 'droppable',
-    });
-
-    return (
-      <div ref={setNodeRef} className="dnd-container" style={{transform: 'scale(' + storeState.canvasScale + ')'}}>
-        {props.children}
-      </div>
-    );
-  }
-
-  function Draggable(props) {
-    const {attributes, listeners, setNodeRef, transform} = useDraggable({
-      id: props.id,
-    });
-
-    const { calculatedX, calculatedY } = transform ? store.calculateCoordinates(transform.x, transform.y) : { calculatedX: 0, calculatedY : 0 }
-
-    const style = transform ? {
-      transform: `translate3d(${props.x + calculatedX}px, ${props.y + calculatedY}px, 0)`, backgroundColor: props.color, width: props.width + "px", height: props.height + "px", outline: props.isSelected ? "5px solid orange" : "none"
-    } : {
-      transform: `translate3d(${props.x}px, ${props.y}px, 0)`, backgroundColor: props.color, width: props.width + "px", height: props.height + "px", outline: props.isSelected ? "5px solid orange" : "none"
-    };
-
-    return (
-      <div ref={setNodeRef} className="furniture-element" style={style} {...listeners} {...attributes}>
-        {props.children}
-      </div>
-    );
-  }
+const Canvas = ({ store, storeState }) => {
 
   function handleDragEnd(event) {
     const x = event.delta.x;
@@ -55,13 +58,18 @@ const Canvas = ({ store, storeState }) => {
 
     const { calculatedX, calculatedY } = store.calculateCoordinates(x, y)
 
-    store.setFurniturePosition(id, calculatedX, calculatedY)
+    if (storeState.furnitures.find(item => item.id === id)) {
+      store.setFurniturePosition(id, calculatedX, calculatedY)
+    } else {
+      store.setRoomPosition(id, calculatedX, calculatedY)
+    }
   }
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
-      <Droppable>
-        {draggables}
+      <Droppable storeState={storeState}>
+        <Items items={storeState.rooms} className={"room"} store={store} storeState={storeState}/>
+        <Items items={storeState.furnitures} className={"furniture"} store={store} storeState={storeState}/>
       </Droppable>
     </DndContext>
   );

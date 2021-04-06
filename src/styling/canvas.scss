@@ -12,13 +12,32 @@ $bar-width: 50px;
   transform-origin: top left;
   pointer-events: none;
 
-  .furniture-element {
+  .furniture {
     position: absolute;
     z-index: 100;
     border-radius: 10px;
     display: flex;
     cursor: pointer;
     pointer-events: all;
+
+    p {
+      font-size: 100px;
+      padding: 4px;
+      border-radius: 4px;
+      background: rgba(255,255,255, 0.5);
+      margin: auto;
+    }
+  }
+
+  .room {
+    position: absolute;
+    z-index: 100;
+    border-radius: 10px;
+    display: flex;
+    cursor: pointer;
+    pointer-events: all;
+    background: rgba(0, 0, 0, 0.25);
+    outline: 50px solid black!important;
 
     p {
       font-size: 100px;

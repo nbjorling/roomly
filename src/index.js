@@ -10,7 +10,6 @@ const DATAPOINTS = {
   WALLS: 'roomlyWalls',
   ROOMS: 'roomlyRooms',
 }
-
 class Furniture {
   constructor({ id, title, color, x, y, width, height, rotation }) {
     this.id = id;
@@ -24,20 +23,6 @@ class Furniture {
   }
 }
 
-class Wall {
-  constructor({ id, title, x, y, width, height, wallWidth }) {
-    this.id = id;
-    this.title = title;
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.wallWidth = wallWidth || 100;
-    this.windows = {};
-    this.doors = {};
-    this.opening = {};
-  }
-}
 class Room {
   constructor({ id, title, x, y, width, height, wallWidth }) {
     this.id = id;
@@ -77,7 +62,6 @@ class Store {
     this._state = {
       elements: [],
       furnitures:  this._getFromLocalStorate(DATAPOINTS.FURNITURES) || [],
-      walls: this._getFromLocalStorate(DATAPOINTS.WALLS) || [],
       rooms: this._getFromLocalStorate(DATAPOINTS.ROOMS) || [],
       selectedItem: null,
       showInputBox: false,
@@ -123,11 +107,19 @@ class Store {
     const newItems = [...this._state.furnitures];
     const index = newItems.findIndex(e => e.id === id);
     newItems[index] = {...newItems[index], x: newItems[index].x + moveX, y: newItems[index].y + moveY};
-    console.log("moved item: x: ", moveX, "y: ", moveY);
-
-
     this._state.furnitures = newItems;
     this._saveToLocalStorage(DATAPOINTS.FURNITURES,  this._state.furnitures);
+    this._triggerCallbacks();
+  }
+
+  setRoomPosition(id, x, y) {
+    const moveX = Math.round(x);
+    const moveY = Math.round(y);
+    const newItems = [...this._state.rooms];
+    const index = newItems.findIndex(e => e.id === id);
+    newItems[index] = {...newItems[index], x: newItems[index].x + moveX, y: newItems[index].y + moveY};
+    this._state.rooms = newItems;
+    this._saveToLocalStorage(DATAPOINTS.ROOMS,  this._state.rooms);
     this._triggerCallbacks();
   }
 
