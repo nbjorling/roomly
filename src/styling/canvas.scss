@@ -6,8 +6,8 @@ $bar-width: 50px;
   position: fixed;
   top: 0;
   left: 0;
-  width: 7000px;
-  height: 7000px;
+  width: 2000px;
+  height: 2000px;
   z-index: 0;
   transform-origin: top left;
   pointer-events: none;
@@ -20,12 +20,16 @@ $bar-width: 50px;
     cursor: pointer;
     pointer-events: all;
 
-    p {
-      font-size: 100px;
+    .title {
+      font-size: 12px;
       padding: 4px;
       border-radius: 4px;
       background: rgba(255,255,255, 0.5);
       margin: auto;
+    }
+
+    .width, .height {
+      display: none;
     }
   }
 
@@ -37,14 +41,32 @@ $bar-width: 50px;
     cursor: pointer;
     pointer-events: all;
     background: rgba(0, 0, 0, 0.25);
-    outline: 50px solid black!important;
+    outline: 20px solid rgba(0, 0, 0, 0.5)!important;
+    color: white;
 
-    p {
-      font-size: 100px;
-      padding: 4px;
-      border-radius: 4px;
-      background: rgba(255,255,255, 0.5);
-      margin: auto;
+    .title {
+      position: absolute;
+      text-align: center;
+      width: 100px;
+      left: calc(50% - 50px);
+      top: -40px;
+    }
+
+    .width {
+      position: absolute;
+      text-align: center;
+      width: 100px;
+      left: calc(50% - 50px);
+      top: -20px;
+    }
+
+    .height {
+      position: absolute;
+      text-align: center;
+      width: 100px;
+      top: calc(50% - 50px);
+      transform: rotate(-90deg);
+      left: -60px;
     }
   }
 }

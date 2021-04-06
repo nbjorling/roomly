@@ -71,9 +71,9 @@ function App({ store }) {
       </div>
       {/* <LeftBar></LeftBar> */}
       <div id="status" ref={statusBar}>Status</div>
-      <RightBar></RightBar>
+      {/* <RightBar></RightBar> */}
+      {/* <div id="camera" ref={viewport} style={{transform: `translate3d(${storeState.canvasCoordinates.x}px, ${storeState.canvasCoordinates.y}px, 0)`}}> */}
       <div id="camera" ref={viewport} style={{transform: `translate3d(${storeState.canvasCoordinates.x}px, ${storeState.canvasCoordinates.y}px, 0)`}}>
-      {/* <div id="camera" ref={viewport} style={{left: storeState.canvasCoordinates.x + "px", top: storeState.canvasCoordinates.y + "px"}}> */}
         <Canvas store={store} storeState={storeState}></Canvas>
       </div>
     </div>

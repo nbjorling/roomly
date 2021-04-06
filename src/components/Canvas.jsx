@@ -12,13 +12,13 @@ function Draggable({ ...props }) {
   const { calculatedX, calculatedY } = transform ? props.store.calculateCoordinates(transform.x, transform.y) : { calculatedX: 0, calculatedY : 0 }
 
   const style = transform ? {
-    transform: `translate3d(${props.x + calculatedX}px, ${props.y + calculatedY}px, 0)`, backgroundColor: props.color, width: props.width + "px", height: props.height + "px", outline: props.isSelected ? "5px solid orange" : "none"
+    transform: `translate3d(${props.x + calculatedX}px, ${props.y + calculatedY}px, 0)`, backgroundColor: props.color, width: props.width + "px", height: props.height + "px", outline: props.isSelected ? "3px solid orange" : "none"
   } : {
-    transform: `translate3d(${props.x}px, ${props.y}px, 0)`, backgroundColor: props.color, width: props.width + "px", height: props.height + "px", outline: props.isSelected ? "5px solid orange" : "none"
+    transform: `translate3d(${props.x}px, ${props.y}px, 0)`, backgroundColor: props.color, width: props.width + "px", height: props.height + "px", outline: props.isSelected ? "3px solid orange" : "none"
   };
 
   return (
-    <div ref={setNodeRef} className={props.className} style={style} {...listeners} {...attributes}>
+    <div onClick={props.onClick} ref={setNodeRef} className={props.className} style={style} {...listeners} {...attributes}>
       {props.children}
     </div>
   );
@@ -40,10 +40,10 @@ const Items = ({ items, className, store, storeState }) => {
   return items.map(item => {
     const isSelected = storeState.selectedItem === item.id;
     return (
-      <Draggable key={item.id} id={item.id} className={className} x={item.x} y={item.y} color={item.color} width={item.width} height={item.height} isSelected={isSelected} store={store}>
-          <p>
-            {item.title}
-          </p>
+      <Draggable onClick={() => store.selectItem(item.id)} key={item.id} id={item.id} className={className} x={item.x} y={item.y} color={item.color} width={item.width} height={item.height} isSelected={isSelected} store={store}>
+          <div className="title">{item.title}</div>
+          <div className="width">{item.width}cm</div>
+          <div className="height">{item.height}cm</div>
       </Draggable>
       )
   });

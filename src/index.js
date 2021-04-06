@@ -66,8 +66,8 @@ class Store {
       selectedItem: null,
       showInputBox: false,
       mouseCoordinates: { x: 0, y: 0 },
-      canvasScale: 0.1,
-      canvasCoordinates: { x: 0, y: 0}
+      canvasScale: 1,
+      canvasCoordinates: { x: 200, y: 100}
     };
   }
 
