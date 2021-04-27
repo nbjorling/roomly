@@ -3,6 +3,7 @@ import LeftBar from './components/LeftBar.jsx';
 import Overlay from './components/Overlay.jsx';
 import RightBar from './components/RightBar.jsx';
 import Canvas from './components/Canvas.jsx';
+import Menu from './components/Menu.jsx';
 import './styling/App.scss';
 import './styling/bars.scss';
 import './styling/canvas.scss';
@@ -73,6 +74,7 @@ function App({ store }) {
       <div id="status" ref={statusBar}>Status</div>
       {/* <RightBar></RightBar> */}
       {/* <div id="camera" ref={viewport} style={{transform: `translate3d(${storeState.canvasCoordinates.x}px, ${storeState.canvasCoordinates.y}px, 0)`}}> */}
+      <Menu store={store}/>
       <div id="camera" ref={viewport} style={{transform: `translate3d(${storeState.canvasCoordinates.x}px, ${storeState.canvasCoordinates.y}px, 0)`}}>
         <Canvas store={store} storeState={storeState}></Canvas>
       </div>
