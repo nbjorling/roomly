@@ -3,7 +3,7 @@ const Menu = () => {
   return (
     <div className="full-width-container">
       <div className="menu-container">
-        <h3 >Projects</h3>
+        <h1>ROOMLY</h1>
         <ul>
           <li className="project-item">
             <div className="title">Project 1</div>

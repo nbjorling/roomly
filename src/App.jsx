@@ -66,10 +66,10 @@ function App({ store }) {
   return (
     <div className="App">
       {store._state.showInputBox ? <Overlay store={store} /> : null}
-
+{/*
       <div className="logo">
         <img src={logo} alt="logo" />
-      </div>
+      </div> */}
       {/* <LeftBar></LeftBar> */}
       <div id="status" ref={statusBar}>Status</div>
       {/* <RightBar></RightBar> */}
