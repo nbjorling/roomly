@@ -12,7 +12,7 @@
 @import "scss/solid.scss";
 
 @font-face {
-  font-family: 'Gloria';
+  // font-family: 'Gloria';
   src: url('../fonts/Gloria_Hallelujah/GloriaHallelujah-Regular.ttf') format('truetype');
 }
 
@@ -74,15 +74,36 @@ h1 {
     width: 300px;
     height: 400px;
     background: white;
-    // background: rgba(255,255,255,0.25);
     margin: auto;
     padding: 4rem;
+    display: flex;
+    flex-direction: column;
 
     box-shadow: rgba(0,0,0,0.1) 0px 2px 4px;
+
+    .instructions {
+      text-align: center;
+    }
 
     ul {
       list-style-type: none;
       padding-inline-start: 0px;
+    }
+
+    input {
+      padding: 0.25rem;
+      border: 0;
+      background: rgb(227, 227, 227);
+      margin-bottom: 4px;
+
+      &:active {
+        outline:2px solid rgb(97, 255, 189);
+        background: white;
+      }
+      &:focus {
+        outline:2px solid rgb(97, 255, 189);
+        background: white;
+      }
     }
 
     button {
@@ -121,7 +142,7 @@ h1 {
       font-size: 12px;
       font-weight: 700;
 
-      .title {
+      .title-container {
         background: rgb(227, 227, 227);
         padding: 0.8rem;
         flex: 1;
@@ -130,6 +151,10 @@ h1 {
         margin-bottom: auto;
         border-bottom: 4px solid rgb(200, 200, 200);
 
+        .last-edited {
+          color:rgba(0,0,0, 0.6);
+          font-size: 0.5rem;
+        }
 
         &:hover {
           background:rgb(207, 207, 207);

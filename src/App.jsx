@@ -14,6 +14,7 @@ function App({ store }) {
   const [storeState, setStoreState] = useState(store.getState());
   const viewport = useRef(null);
   const statusBar = useRef(null);
+  let [menuActive, setMenuActive] = useState(true);
 
   useEffect(() => {
     const fn = () => setStoreState(store.getState());
@@ -74,7 +75,7 @@ function App({ store }) {
       <div id="status" ref={statusBar}>Status</div>
       {/* <RightBar></RightBar> */}
       {/* <div id="camera" ref={viewport} style={{transform: `translate3d(${storeState.canvasCoordinates.x}px, ${storeState.canvasCoordinates.y}px, 0)`}}> */}
-      <Menu store={store}/>
+      {menuActive ? <Menu store={store} setMenuActive={setMenuActive}/> : null}
       <div id="camera" ref={viewport} style={{transform: `translate3d(${storeState.canvasCoordinates.x}px, ${storeState.canvasCoordinates.y}px, 0)`}}>
         <Canvas store={store} storeState={storeState}></Canvas>
       </div>

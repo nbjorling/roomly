@@ -6,9 +6,18 @@ import reportWebVitals from './reportWebVitals';
 import { v4 as uuidv4 } from 'uuid';
 
 const DATAPOINTS = {
+  PROJECTS: 'projects',
   FURNITURES: 'roomlyFurnitures',
   WALLS: 'roomlyWalls',
   ROOMS: 'roomlyRooms',
+}
+
+class Project {
+  constructor({ id, title, lastEdited }) {
+    this.id = id;
+    this.title = title;
+    this.lastEdited = lastEdited;
+  }
 }
 class Furniture {
   constructor({ id, title, color, x, y, width, height, rotation }) {
@@ -61,6 +70,8 @@ class Store {
     this._callbacks = new Set();
     this._state = {
       elements: [],
+      projects: this._getFromLocalStorate(DATAPOINTS.PROJECTS) || [],
+      currentProject: '',
       furnitures:  this._getFromLocalStorate(DATAPOINTS.FURNITURES) || [],
       rooms: this._getFromLocalStorate(DATAPOINTS.ROOMS) || [],
       selectedItem: null,
@@ -95,10 +106,15 @@ class Store {
 
   _saveToLocalStorage(datapoint, state) {
     localStorage.setItem(datapoint, JSON.stringify(state));
+    this._triggerCallbacks();
   }
 
   _getFromLocalStorate(datapoint) {
     return JSON.parse(localStorage.getItem(datapoint))
+  }
+
+  loadProject(id) {
+    this._state.currentProject = id;
   }
 
   setFurniturePosition(id, x, y) {
@@ -132,6 +148,20 @@ class Store {
     const calculatedX = x / this._state.canvasScale;
     const calculatedY = y / this._state.canvasScale;
     return { calculatedX: calculatedX, calculatedY: calculatedY }
+  }
+
+  createProject({ title }) {
+    const newId = uuidv4();
+    this._state.projects.push(
+      new Project({ id: newId, title: title, lastEdited: Date('ddmm') })
+    );
+    this._saveToLocalStorage(DATAPOINTS.PROJECTS, this._state.projects);
+  }
+
+  deleteProject({ id }) {
+    const idx = this._state.projects.findIndex(project => project.id === id);
+    this._state.projects.splice(idx, 1);
+    this._saveToLocalStorage(DATAPOINTS.PROJECTS, this._state.projects);
   }
 
   createFurniture({ title, color, width, height }) {
@@ -173,6 +203,7 @@ class Store {
 
 const store = new Store();
 
+window.createProject = ((e) => store.createRoom(e));
 window.createFurniture = ((e) => store.createFurniture(e));
 window.createRoom = ((e) => store.createRoom(e));
 
