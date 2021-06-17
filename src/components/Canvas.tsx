@@ -1,8 +1,6 @@
 import React from "react";
-
-import {DndContext} from '@dnd-kit/core';
-import {useDroppable} from '@dnd-kit/core';
-import {useDraggable} from '@dnd-kit/core';
+import { DndContext, useDroppable, useDraggable } from '@dnd-kit/core';
+import './Canvas.scss';
 
 function Draggable({ ...props }) {
   const {attributes, listeners, setNodeRef, transform} = useDraggable({
@@ -69,7 +67,6 @@ const Canvas = ({ store, storeState }) => {
   return (
     <DndContext onDragEnd={handleDragEnd}>
       <Droppable storeState={storeState}>
-        {/* <Items items={storeState.rooms} className={"room"} store={store} storeState={storeState}/> */}
         <Items items={store._state.currentProject && store._state.currentProject.furnitures} className={"furniture"} store={store} storeState={storeState}/>
       </Droppable>
     </DndContext>

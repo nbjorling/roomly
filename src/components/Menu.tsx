@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const ProjectItem = ({ id, title, lastEdited, loadProject, deleteProject }) => {
   return (
     <li className="project-item">
-      <div className="title-container" onClick={() => loadProject({ id })}>
+      <button className="title-container" onClick={() => loadProject({ id })}>
         {title}
         <div className="last-edited">Last Edited: {lastEdited}</div>
-      </div>
+      </button>
       <button className="download"><i className="fas fa-download"></i></button>
       <button className="trash" onClick={() => deleteProject({ id })}><i className="fas fa-trash"></i></button>
     </li>
@@ -15,7 +15,7 @@ const ProjectItem = ({ id, title, lastEdited, loadProject, deleteProject }) => {
 
 const Menu = ({ store, setMenuActive }) => {
   let [title, setTitle] = useState('');
-  let [toggleCreate, setToggleCreate] = useState(false);
+  let [createNewMode, setCreateNewMode] = useState(false);
   let [projects, setProjects] = useState(store._state.projects || []);
 
   useEffect(() => {
@@ -24,9 +24,13 @@ const Menu = ({ store, setMenuActive }) => {
     return () => store.offUpdate(fn);
   }, [store]);
 
+  function toggleCreate() {
+    setCreateNewMode(true);
+  }
+
   function createProject() {
     store.createProject({ title });
-    setToggleCreate(false);
+    setCreateNewMode(false);
     setTitle('');
   }
 
@@ -65,10 +69,17 @@ const Menu = ({ store, setMenuActive }) => {
           })}
         </div>
 
-        { toggleCreate && <input onChange={(e) => setTitle(e.target.value)} placeholder="Project Title"/> }
-        { toggleCreate
+        { createNewMode &&
+          <input
+            autoFocus={true}
+            onChange={(e) => setTitle(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && createProject()}
+            placeholder="Project Title"
+          />
+        }
+        { createNewMode
           ? <button className="new-project" onClick={() => createProject()}>Create</button>
-          : <button onClick={() => setToggleCreate(true)} className="new-project">New Project</button>
+          : <button onClick={() => toggleCreate()} className="new-project">New Project</button>
         }
       </div>
     </div>

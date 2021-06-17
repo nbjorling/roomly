@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './styling/normalize.scss';
 import './index.css';
-import App from './App.jsx';
+import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { v4 as uuidv4 } from 'uuid';
 import { Set } from 'typescript';
@@ -11,28 +12,6 @@ const DATAPOINTS = {
   FURNITURES: 'roomlyFurnitures',
   WALLS: 'roomlyWalls',
   ROOMS: 'roomlyRooms',
-}
-
-class Furniture {
-  id: string
-  title: string
-  color: string
-  x: number
-  y: number
-  width: number
-  height: number
-  rotation: number
-
-  constructor({ id, title, color, x, y, width, height, rotation }) {
-    this.id = id;
-    this.title = title;
-    this.color = color;
-    this.rotation = rotation || 0;
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-  }
 }
 
 class Project {
@@ -74,7 +53,30 @@ class Room {
   }
 }
 
-class StoreStateObject {
+class Furniture {
+  id: string
+  title: string
+  color: string
+  x: number
+  y: number
+  width: number
+  height: number
+  rotation: number
+
+  constructor({ id, title, color, x, y, width, height, rotation }) {
+    this.id = id;
+    this.title = title;
+    this.color = color;
+    this.rotation = rotation || 0;
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+  }
+}
+
+
+type StoreStateObject = {
   elements: Array<string>
   projects: Array<Project>
   currentProject: Project
@@ -118,7 +120,7 @@ class Store {
     return Object.assign({}, this._state);
   }
 
-  selectItem(id) {
+  selectItem(id:string) {
     this._state.selectedItem = id;
     this._callbacks.forEach(fn => fn());
   }
@@ -127,12 +129,12 @@ class Store {
     this._callbacks.forEach(fn => fn());
   }
 
-  _saveToLocalStorage(datapoint, state) {
+  _saveToLocalStorage(datapoint:string, state) {
     localStorage.setItem(datapoint, JSON.stringify(state));
     this._triggerCallbacks();
   }
 
-  _getFromLocalStorate(datapoint) {
+  _getFromLocalStorate(datapoint:string) {
     return JSON.parse(localStorage.getItem(datapoint))
   }
 
@@ -152,7 +154,7 @@ class Store {
     this._saveToLocalStorage(DATAPOINTS.PROJECTS, projects);
   }
 
-  setFurniturePosition(id, x, y) {
+  setFurniturePosition(id:string, x:number, y:number) {
     const moveX = Math.round(x);
     const moveY = Math.round(y);
     const newItems = [...this._state.currentProject.furnitures];
@@ -163,29 +165,30 @@ class Store {
     this._triggerCallbacks();
   }
 
-  setRoomPosition(id, x, y) {
+  setRoomPosition(id:string, x:number, y:number) {
     const moveX = Math.round(x);
     const moveY = Math.round(y);
     const newItems = [...this._state.rooms];
     const index = newItems.findIndex(e => e.id === id);
     newItems[index] = {...newItems[index], x: newItems[index].x + moveX, y: newItems[index].y + moveY};
     this._state.rooms = newItems;
-    this._saveToLocalStorage(DATAPOINTS.ROOMS,  this._state.rooms);
+    this._saveToLocalStorage(DATAPOINTS.ROOMS, this._state.rooms);
     this._triggerCallbacks();
   }
 
-  setCanvasCoordinates(posX, posY) {
+  setCanvasCoordinates(posX:number, posY:number) {
     this._state.canvasCoordinates = { x: posX, y: posY };
     this._triggerCallbacks();
   }
 
-  calculateCoordinates(x, y) {
+  calculateCoordinates(x:number, y:number) {
     const calculatedX = x / this._state.canvasScale;
     const calculatedY = y / this._state.canvasScale;
     return { calculatedX: calculatedX, calculatedY: calculatedY }
   }
 
   createProject({ title }) {
+
     const newId = uuidv4();
     this._state.projects.push(
       new Project(newId, title, Date())
@@ -213,7 +216,7 @@ class Store {
     this._triggerCallbacks();
   }
 
-  createRoom({ title, color, width, height }) {
+  createRoom({ title, width, height }) {
     console.log("Create new room");
     let rooms = this._state.rooms;
     const newId = uuidv4();
@@ -225,13 +228,13 @@ class Store {
     this._triggerCallbacks();
   }
 
-  showFurnitureInputBox(mx, my) {
+  showFurnitureInputBox(mx:number, my:number) {
     this._state.mouseCoordinates = { x: mx, y:my }
     this._state.showInputBox = true;
     this._triggerCallbacks();
   }
 
-  closeFurnitureInputBox(e) {
+  closeFurnitureInputBox() {
     this._state.showInputBox = false;
     this._triggerCallbacks();
   }
@@ -258,8 +261,6 @@ ReactDOM.render(
   <App store={store}/>,
   document.getElementById('root')
 );
-
-
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
