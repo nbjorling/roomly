@@ -4,6 +4,7 @@ import './index.css';
 import App from './App.jsx';
 import reportWebVitals from './reportWebVitals';
 import { v4 as uuidv4 } from 'uuid';
+import { Set } from 'typescript';
 
 const DATAPOINTS = {
   PROJECTS: 'projects',
@@ -12,14 +13,16 @@ const DATAPOINTS = {
   ROOMS: 'roomlyRooms',
 }
 
-class Project {
-  constructor({ id, title, lastEdited }) {
-    this.id = id;
-    this.title = title;
-    this.lastEdited = lastEdited;
-  }
-}
 class Furniture {
+  id: string
+  title: string
+  color: string
+  x: number
+  y: number
+  width: number
+  height: number
+  rotation: number
+
   constructor({ id, title, color, x, y, width, height, rotation }) {
     this.id = id;
     this.title = title;
@@ -32,7 +35,31 @@ class Furniture {
   }
 }
 
+class Project {
+  id: string
+  title: string
+  lastEdited: string
+  furnitures: Array<Furniture>
+
+  constructor(id: string, title: string, lastEdited: string) {
+    this.id = id;
+    this.title = title;
+    this.lastEdited = lastEdited;
+  }
+}
+
 class Room {
+  id: string
+  title: string
+  x: number
+  y: number
+  width: number
+  height: number
+  wallWidth: number
+  windows: object
+  doors: object
+  opening: object
+
   constructor({ id, title, x, y, width, height, wallWidth }) {
     this.id = id;
     this.title = title;
@@ -47,32 +74,28 @@ class Room {
   }
 }
 
-class Window {
-  constructor({ id, width, title }) {
-    this.id = id;
-    this.title = title || "Window";
-    this.width = width;
-  }
-}
-
-class Door {
-  constructor({ id, width, title }) {
-    this.id = id;
-    this.title = title || "Door";
-    this.width = width;
-    this.openingSide = "left";
-  }
+class StoreStateObject {
+  elements: Array<string>
+  projects: Array<Project>
+  currentProject: Project
+  rooms: Array<Room>
+  selectedItem: string
+  showInputBox: boolean
+  mouseCoordinates: { x: number, y: number }
+  canvasScale: number
+  canvasCoordinates: { x: number, y: number}
 }
 
 class Store {
+  _callbacks: Set<any>
+  _state: StoreStateObject
 
   constructor() {
     this._callbacks = new Set();
     this._state = {
       elements: [],
       projects: this._getFromLocalStorate(DATAPOINTS.PROJECTS) || [],
-      currentProject: '',
-      furnitures:  this._getFromLocalStorate(DATAPOINTS.FURNITURES) || [],
+      currentProject: null,
       rooms: this._getFromLocalStorate(DATAPOINTS.ROOMS) || [],
       selectedItem: null,
       showInputBox: false,
@@ -113,18 +136,30 @@ class Store {
     return JSON.parse(localStorage.getItem(datapoint))
   }
 
-  loadProject(id) {
-    this._state.currentProject = id;
+  loadProject({ id }) {
+    this._state.currentProject = this._state.projects.find(project => project.id === id);
+  }
+
+  // saveFurnituresToProject(projectId) {
+  //   this._state.currentProject.furnitures = this._state.furnitures;
+  // }
+
+  saveProject() {
+    let projects = this._state.projects;
+    let idx = projects.findIndex(project => project.id === this._state.currentProject.id);
+    let updatedProject = this._state.currentProject;
+    projects.splice(idx, 1, updatedProject);
+    this._saveToLocalStorage(DATAPOINTS.PROJECTS, projects);
   }
 
   setFurniturePosition(id, x, y) {
     const moveX = Math.round(x);
     const moveY = Math.round(y);
-    const newItems = [...this._state.furnitures];
+    const newItems = [...this._state.currentProject.furnitures];
     const index = newItems.findIndex(e => e.id === id);
     newItems[index] = {...newItems[index], x: newItems[index].x + moveX, y: newItems[index].y + moveY};
-    this._state.furnitures = newItems;
-    this._saveToLocalStorage(DATAPOINTS.FURNITURES,  this._state.furnitures);
+    this._state.currentProject.furnitures = newItems;
+    this.saveProject();
     this._triggerCallbacks();
   }
 
@@ -153,7 +188,7 @@ class Store {
   createProject({ title }) {
     const newId = uuidv4();
     this._state.projects.push(
-      new Project({ id: newId, title: title, lastEdited: Date('ddmm') })
+      new Project(newId, title, Date())
     );
     this._saveToLocalStorage(DATAPOINTS.PROJECTS, this._state.projects);
   }
@@ -166,13 +201,15 @@ class Store {
 
   createFurniture({ title, color, width, height }) {
     console.log("Create new furniture");
-    let furnitures = this._state.furnitures;
+    let furnitures = this._state.currentProject.furnitures || [];
     const newId = uuidv4();
     furnitures.push(
-      new Furniture({ id: newId, title: title, x: this._state.mouseCoordinates.x, y: this._state.mouseCoordinates.y, color: color, width: width, height: height })
+      new Furniture({ id: newId, title: title, x: this._state.mouseCoordinates.x, y: this._state.mouseCoordinates.y, color: color, width: width, height: height, rotation: 0 })
     );
+
+    this._state.currentProject.furnitures = furnitures;
     this._state.showInputBox = false;
-    this._saveToLocalStorage(DATAPOINTS.FURNITURES, this._state.furnitures);
+    this.saveProject();
     this._triggerCallbacks();
   }
 
@@ -181,7 +218,7 @@ class Store {
     let rooms = this._state.rooms;
     const newId = uuidv4();
     rooms.push(
-      new Room({ id: newId, title: title, x: this._state.mouseCoordinates.x, y: this._state.mouseCoordinates.y, color: color, width: width, height: height })
+      new Room({ id: newId, title: title, x: this._state.mouseCoordinates.x, y: this._state.mouseCoordinates.y, width: width, height: height, wallWidth: 20 })
     );
     this._state.showInputBox = false;
     this._saveToLocalStorage(DATAPOINTS.ROOMS, this._state.rooms);
@@ -203,16 +240,26 @@ class Store {
 
 const store = new Store();
 
+declare global {
+  interface Window {
+    createProject: any;
+    createFurniture: any;
+    createRoom: any;
+  }
+}
+
 window.createProject = ((e) => store.createRoom(e));
 window.createFurniture = ((e) => store.createFurniture(e));
 window.createRoom = ((e) => store.createRoom(e));
+// window.saveFurnituresToProject = ((e) => store.saveFurnituresToProject(e));
+// window.saveProjectToProjects = ((e) => store.saveProjectToProjects(e));
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App store={store}/>
-  </React.StrictMode>,
+  <App store={store}/>,
   document.getElementById('root')
 );
+
+
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
