@@ -3,12 +3,12 @@ import React, { useState, useEffect } from 'react';
 const ProjectItem = ({ id, title, lastEdited, loadProject, deleteProject }) => {
   return (
     <li className="project-item">
-      <div className="title-container" onClick={() => loadProject({ id})}>
+      <div className="title-container" onClick={() => loadProject({ id })}>
         {title}
         <div className="last-edited">Last Edited: {lastEdited}</div>
       </div>
-      <button className="download"><i class="fas fa-download"></i></button>
-      <button className="trash" onClick={() => deleteProject({ id })}><i class="fas fa-trash"></i></button>
+      <button className="download"><i className="fas fa-download"></i></button>
+      <button className="trash" onClick={() => deleteProject({ id })}><i className="fas fa-trash"></i></button>
     </li>
   );
 }
@@ -50,11 +50,12 @@ const Menu = ({ store, setMenuActive }) => {
             </div>
           : null
         }
-        <ul>
+        <div className="project-list">
           {projects.map(project => {
             return (
               <ProjectItem
                 key={project.id}
+                id={project.id}
                 title={project.title}
                 lastEdited={project.lastEdited}
                 loadProject={loadProject}
@@ -62,7 +63,7 @@ const Menu = ({ store, setMenuActive }) => {
               />
             )
           })}
-        </ul>
+        </div>
 
         { toggleCreate && <input onChange={(e) => setTitle(e.target.value)} placeholder="Project Title"/> }
         { toggleCreate

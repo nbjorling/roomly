@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import LeftBar from './components/LeftBar.jsx';
+// import LeftBar from './components/LeftBar.jsx';
 import Overlay from './components/Overlay.jsx';
-import RightBar from './components/RightBar.jsx';
+// import RightBar from './components/RightBar.jsx';
 import Canvas from './components/Canvas.jsx';
 import Menu from './components/Menu.jsx';
 import './styling/App.scss';
 import './styling/bars.scss';
 import './styling/canvas.scss';
-import logo from './logo/logo.svg';
+// import logo from './logo/logo.svg';
 import Hammer from 'hammerjs';
 
 function App({ store }) {

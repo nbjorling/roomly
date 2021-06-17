@@ -37,13 +37,14 @@ function Droppable({ ...props }) {
 }
 
 const Items = ({ items, className, store, storeState }) => {
+  if (!items) return null;
   return items.map(item => {
     const isSelected = storeState.selectedItem === item.id;
     return (
       <Draggable onClick={() => store.selectItem(item.id)} key={item.id} id={item.id} className={className} x={item.x} y={item.y} color={item.color} width={item.width} height={item.height} isSelected={isSelected} store={store}>
-          <div className="title">{item.title}</div>
-          <div className="width">{item.width}cm</div>
-          <div className="height">{item.height}cm</div>
+        <div className="title">{item.title}</div>
+        <div className="width">{item.width}cm</div>
+        <div className="height">{item.height}cm</div>
       </Draggable>
       )
   });
@@ -58,7 +59,7 @@ const Canvas = ({ store, storeState }) => {
 
     const { calculatedX, calculatedY } = store.calculateCoordinates(x, y)
 
-    if (storeState.furnitures.find(item => item.id === id)) {
+    if (store._state.currentProject.furnitures.find(item => item.id === id)) {
       store.setFurniturePosition(id, calculatedX, calculatedY)
     } else {
       store.setRoomPosition(id, calculatedX, calculatedY)
@@ -68,8 +69,8 @@ const Canvas = ({ store, storeState }) => {
   return (
     <DndContext onDragEnd={handleDragEnd}>
       <Droppable storeState={storeState}>
-        <Items items={storeState.rooms} className={"room"} store={store} storeState={storeState}/>
-        <Items items={storeState.furnitures} className={"furniture"} store={store} storeState={storeState}/>
+        {/* <Items items={storeState.rooms} className={"room"} store={store} storeState={storeState}/> */}
+        <Items items={store._state.currentProject && store._state.currentProject.furnitures} className={"furniture"} store={store} storeState={storeState}/>
       </Droppable>
     </DndContext>
   );
