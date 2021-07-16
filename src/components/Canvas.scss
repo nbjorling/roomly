@@ -1,7 +1,5 @@
 $bar-width: 50px;
 
-
-
 .dnd-container {
   position: fixed;
   top: 0;
@@ -19,6 +17,7 @@ $bar-width: 50px;
     display: flex;
     cursor: pointer;
     pointer-events: all;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
 
     .title {
       font-size: 12px;
@@ -35,7 +34,7 @@ $bar-width: 50px;
 
   .room {
     position: absolute;
-    z-index: 100;
+    z-index: 50;
     border-radius: 10px;
     display: flex;
     cursor: pointer;

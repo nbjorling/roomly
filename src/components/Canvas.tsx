@@ -1,4 +1,3 @@
-import React from "react";
 import { DndContext, useDroppable, useDraggable } from '@dnd-kit/core';
 import './Canvas.scss';
 
