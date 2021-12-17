@@ -13,7 +13,7 @@ $bar-width: 50px;
   }
 
   &.bar-container--right {
-    background: rgba($color: #333, $alpha: 1.0);
+    background: rgba($color: #aeaeae, $alpha: 1);
     border-left: 1px solid black;
     top: 0;
     right: 0;
@@ -25,6 +25,15 @@ $bar-width: 50px;
     .section {
       outline: 1px 0px 1px 0px solid black;
       padding: 10px;
+    }
+
+    .furniture-list {
+      .furniture {
+        background: white;
+        border-radius: 2px;
+        padding: 4px;
+        margin-bottom: 2px;
+      }
     }
   }
 

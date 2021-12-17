@@ -1,20 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 
 const ProjectItem = ({ id, title, lastEdited, loadProject, deleteProject }) => {
   return (
     <li className="project-item">
-      <button className="title-container" onClick={() => loadProject({ id })}>
+      <button className="title-container" onClick={() => loadProject(id)}>
         {title}
         <div className="last-edited">Last Edited: {lastEdited}</div>
       </button>
-      <button className="download"><i className="fas fa-download"></i></button>
-      <button className="trash" onClick={() => deleteProject({ id })}><i className="fas fa-trash"></i></button>
+      <button className="download">
+        <i className="fas fa-download"></i>
+      </button>
+      <button className="trash" onClick={() => deleteProject({ id })}>
+        <i className="fas fa-trash"></i>
+      </button>
     </li>
   );
-}
+};
 
 const Menu = ({ store, setMenuActive }) => {
-  let [title, setTitle] = useState('');
+  let [title, setTitle] = useState("");
   let [createNewMode, setCreateNewMode] = useState(false);
   let [projects, setProjects] = useState(store._state.projects || []);
 
@@ -31,15 +35,15 @@ const Menu = ({ store, setMenuActive }) => {
   function createProject() {
     store.createProject({ title });
     setCreateNewMode(false);
-    setTitle('');
+    setTitle("");
   }
 
-  function deleteProject({ id }) {
-    store.deleteProject({ id });
+  function deleteProject(id: string) {
+    store.deleteProject(id);
   }
 
-  function loadProject({ id }) {
-    store.loadProject({ id });
+  function loadProject(id: string) {
+    store.loadProject(id);
     setMenuActive(false);
   }
 
@@ -47,15 +51,14 @@ const Menu = ({ store, setMenuActive }) => {
     <div className="full-width-container">
       <div className="menu-container">
         <h1>ROOMLY</h1>
-        {projects.length < 1
-          ? <div className="instructions">
+        {projects.length < 1 ? (
+          <div className="instructions">
             You have no projects yet!
             <br></br> Click the "New Project" Button to start a project.
-            </div>
-          : null
-        }
+          </div>
+        ) : null}
         <div className="project-list">
-          {projects.map(project => {
+          {projects.map((project) => {
             return (
               <ProjectItem
                 key={project.id}
@@ -65,25 +68,30 @@ const Menu = ({ store, setMenuActive }) => {
                 loadProject={loadProject}
                 deleteProject={deleteProject}
               />
-            )
+            );
           })}
         </div>
 
-        { createNewMode &&
+        {createNewMode && (
           <input
             autoFocus={true}
             onChange={(e) => setTitle(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && createProject()}
+            onKeyDown={(e) => e.key === "Enter" && createProject()}
             placeholder="Project Title"
           />
-        }
-        { createNewMode
-          ? <button className="new-project" onClick={() => createProject()}>Create</button>
-          : <button onClick={() => toggleCreate()} className="new-project">New Project</button>
-        }
+        )}
+        {createNewMode ? (
+          <button className="new-project" onClick={() => createProject()}>
+            Create
+          </button>
+        ) : (
+          <button onClick={() => toggleCreate()} className="new-project">
+            New Project
+          </button>
+        )}
       </div>
     </div>
   );
-}
+};
 
 export default Menu;

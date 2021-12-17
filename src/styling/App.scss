@@ -13,49 +13,43 @@
 
 @font-face {
   // font-family: 'Gloria';
-  src: url('../fonts/Gloria_Hallelujah/GloriaHallelujah-Regular.ttf') format('truetype');
+  src: url("../fonts/Gloria_Hallelujah/GloriaHallelujah-Regular.ttf")
+    format("truetype");
 }
 
 @font-face {
-  font-family: 'Rubik';
-  src: url('../fonts/Rubik/Rubik-VariableFont_wght.ttf') format('truetype');
+  font-family: "Rubik";
+  src: url("../fonts/Rubik/Rubik-VariableFont_wght.ttf") format("truetype");
 }
 
 body {
   overflow: hidden;
   margin: 0;
   background-color: rgb(234, 234, 234);
-  font-family: 'Rubik', sans-serif;
+  font-family: "Rubik", sans-serif;
 }
 
 button {
-  font-family: 'Rubik', sans-serif;
+  font-family: "Rubik", sans-serif;
   font-weight: 400;
 }
 
 h1 {
-  font-family: 'Gloria', sans-serif;
+  font-family: "Gloria", sans-serif;
   text-align: center;
   font-size: 3.5rem;
   margin-block-start: 0;
   margin-block-end: 1rem;
-  color:rgb(97, 255, 189);
+  color: rgb(97, 255, 189);
   filter: drop-shadow(2px 2px 2px);
 
-  text-shadow:
-    0px -1px 1px rgba(255,255,255, 0.7),
-    -1px -1px 3px rgba(255,255,150, 0.7),
-    0px 0px 0px rgb(113, 251, 193),
-    1px 1px 1px rgb(113, 251, 193),
-    1px 1px 3px rgb(88, 226, 169),
-    1px 2px 1px rgb(83, 195, 149),
-    1px 3px 1px rgb(83, 195, 149),
-    1px 4px 1px rgb(83, 195, 149),
-    1px 5px 1px rgb(83, 195, 149),
-    1px 6px 1px rgb(83, 195, 149),
-    1px 7px 1px rgb(83, 195, 149),
-    1px 10px 6px rgba(0,0,0, 0.6),
-    1px 14px 10px rgb(83, 195, 149),
+  text-shadow: 0px -1px 1px rgba(255, 255, 255, 0.7),
+    -1px -1px 3px rgba(255, 255, 150, 0.7), 0px 0px 0px rgb(113, 251, 193),
+    1px 1px 1px rgb(113, 251, 193), 1px 1px 3px rgb(88, 226, 169),
+    1px 2px 1px rgb(83, 195, 149), 1px 3px 1px rgb(83, 195, 149),
+    1px 4px 1px rgb(83, 195, 149), 1px 5px 1px rgb(83, 195, 149),
+    1px 6px 1px rgb(83, 195, 149), 1px 7px 1px rgb(83, 195, 149),
+    1px 10px 6px rgba(0, 0, 0, 0.6), 1px 14px 10px rgb(83, 195, 149),
     1px 16px 35px rgb(83, 195, 149);
 }
 
@@ -73,8 +67,8 @@ h1 {
   }
 }
 
-.project-list {
-  margin-bottom: auto!important;
+.project-list  {
+  margin-bottom: auto !important;
   padding: 10px;
   background: red;
   height: 200px;
@@ -82,8 +76,11 @@ h1 {
 
 .full-width-container {
   height: 100vh;
-  background:linear-gradient(rgb(83, 195, 149),#96deff);
+  background: linear-gradient(rgb(83, 195, 149), #96deff);
   display: flex;
+  z-index: 200;
+  position: absolute;
+  width: 100vw;
 
   .menu-container {
     width: 300px;
@@ -94,7 +91,7 @@ h1 {
     display: flex;
     flex-direction: column;
 
-    box-shadow: rgba(0,0,0,0.1) 0px 2px 4px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
 
     .instructions {
       text-align: center;
@@ -113,11 +110,11 @@ h1 {
       margin-bottom: 4px;
 
       &:active {
-        outline:2px solid rgb(97, 255, 189);
+        outline: 2px solid rgb(97, 255, 189);
         background: white;
       }
       &:focus {
-        outline:2px solid rgb(97, 255, 189);
+        outline: 2px solid rgb(97, 255, 189);
         background: white;
       }
     }
@@ -131,23 +128,23 @@ h1 {
       &.new-project {
         width: 100%;
         padding: 0.8rem;
-        background:rgb(97, 255, 189);
-        border-bottom: 4px solid rgb(83, 195, 149) ;
+        background: rgb(97, 255, 189);
+        border-bottom: 4px solid rgb(83, 195, 149);
         border-radius: 3px;
 
         &:hover {
-          background:rgb(87, 221, 165);
-          border-bottom: 4px solid rgb(83, 195, 149) ;
+          background: rgb(87, 221, 165);
+          border-bottom: 4px solid rgb(83, 195, 149);
         }
         &:active {
-          background:rgb(87, 221, 165);
+          background: rgb(87, 221, 165);
           border-bottom: 0px solid;
           border-top: 4px solid white;
         }
         &:focus {
           outline: none;
-          background:rgb(87, 221, 165);
-          border-bottom: 4px solid rgb(83, 195, 149) ;
+          background: rgb(87, 221, 165);
+          border-bottom: 4px solid rgb(83, 195, 149);
         }
       }
     }
@@ -170,24 +167,24 @@ h1 {
         font-weight: 700;
 
         .last-edited {
-          color:rgba(0,0,0, 0.6);
+          color: rgba(0, 0, 0, 0.6);
           font-size: 0.5rem;
           font-weight: 400;
         }
 
         &:hover {
-          background:rgb(207, 207, 207);
+          background: rgb(207, 207, 207);
           border-bottom: 4px solid rgb(200, 200, 200);
         }
 
         &:active {
-          background:rgb(207, 207, 207);
+          background: rgb(207, 207, 207);
           border-bottom: 0px solid;
           border-top: 4px solid white;
         }
         &:focus {
           outline: none;
-          background:rgb(207, 207, 207);
+          background: rgb(207, 207, 207);
           border-bottom: 4px solid rgb(200, 200, 200);
         }
       }
@@ -200,34 +197,34 @@ h1 {
 
         &.download {
           &:hover {
-            background:rgb(97, 255, 189);
-            border-bottom: 4px solid rgb(83, 195, 149) ;
+            background: rgb(97, 255, 189);
+            border-bottom: 4px solid rgb(83, 195, 149);
           }
           &:active {
-            background:rgb(97, 255, 189);
+            background: rgb(97, 255, 189);
             border-bottom: 0px solid;
             border-top: 4px solid white;
           }
           &:focus {
             outline: none;
-            background:rgb(97, 255, 189);
-            border-bottom: 4px solid rgb(83, 195, 149) ;
+            background: rgb(97, 255, 189);
+            border-bottom: 4px solid rgb(83, 195, 149);
           }
         }
 
         &.trash {
           &:hover {
-            background:salmon;
+            background: salmon;
             border-bottom: 4px solid rgb(193, 109, 100);
           }
           &:active {
-            background:salmon;
+            background: salmon;
             border-bottom: 0px solid;
             border-top: 4px solid white;
           }
           &:focus {
             outline: none;
-            background:salmon;
+            background: salmon;
             border-bottom: 4px solid rgb(193, 109, 100);
           }
         }
@@ -241,7 +238,7 @@ h1 {
   display: flex;
   width: 100vw;
   height: 100vh;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 9999;
 
   .input-promt {
