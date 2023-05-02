@@ -1,12 +1,11 @@
 import { v4 as uuidv4 } from "uuid";
 import { Set } from "typescript";
 
-const DATAPOINTS = {
-  PROJECTS: "projects",
-  FURNITURES: "roomlyFurnitures",
-  WALLS: "roomlyWalls",
-  ROOMS: "roomlyRooms",
-};
+type DATAPOINTS =
+  | "projects"
+  | "roomlyFurnitures"
+  | "roomlyWalls"
+  | "roomlyRooms";
 
 class Project {
   id: string;
@@ -34,15 +33,23 @@ class Room {
   doors: object;
   opening: object;
 
-  constructor(
-    id: string,
-    title: string,
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    wallWidth: number
-  ) {
+  constructor({
+    id,
+    title,
+    x,
+    y,
+    width,
+    height,
+    wallWidth,
+  }: {
+    id: string;
+    title: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    wallWidth: number;
+  }) {
     this.id = id;
     this.title = title;
     this.x = x;
@@ -66,16 +73,25 @@ class Furniture {
   height: number;
   rotation: number;
 
-  constructor(
-    id: string,
-    title: string,
-    color: string,
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    rotation: number
-  ) {
+  constructor({
+    id,
+    title,
+    color,
+    x,
+    y,
+    width,
+    height,
+    rotation,
+  }: {
+    id: string;
+    title: string;
+    color: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    rotation: number;
+  }) {
     this.id = id;
     this.title = title;
     this.color = color;
@@ -90,9 +106,9 @@ class Furniture {
 type StoreStateObject = {
   elements: Array<string>;
   projects: Array<Project>;
-  currentProject: Project;
+  currentProject: Project | null;
   rooms: Array<Room>;
-  selectedItem: string;
+  selectedItem: string | null;
   showInputBox: boolean;
   mouseCoordinates: { x: number; y: number };
   canvasScale: number;
@@ -107,9 +123,9 @@ export class Store {
     this._callbacks = new Set();
     this._state = {
       elements: [],
-      projects: this._getFromLocalStorate(DATAPOINTS.PROJECTS) || [],
+      projects: this._getFromLocalStorate("projects") || [],
       currentProject: null,
-      rooms: this._getFromLocalStorate(DATAPOINTS.ROOMS) || [],
+      rooms: this._getFromLocalStorate("roomlyRooms") || [],
       selectedItem: null,
       showInputBox: false,
       mouseCoordinates: { x: 0, y: 0 },
@@ -140,13 +156,13 @@ export class Store {
     this._callbacks.forEach((fn) => fn());
   }
 
-  _saveToLocalStorage(datapoint: string, state: any) {
+  _saveToLocalStorage(datapoint: DATAPOINTS, state: any) {
     localStorage.setItem(datapoint, JSON.stringify(state));
     this._triggerCallbacks();
   }
 
-  _getFromLocalStorate(datapoint: typeof DATAPOINTS) {
-    return JSON.parse(localStorage.getItem(datapoint));
+  _getFromLocalStorate(datapoint: DATAPOINTS) {
+    return JSON.parse(localStorage.getItem(datapoint) || "");
   }
 
   loadProject(id: string) {
@@ -161,16 +177,18 @@ export class Store {
   // }
 
   saveProject() {
+    if (!this._state.currentProject || !this._state.projects) return;
     let projects = this._state.projects;
     let idx = projects.findIndex(
-      (project) => project.id === this._state.currentProject.id
+      (project) => project.id === this._state.currentProject?.id
     );
     let updatedProject = this._state.currentProject;
     projects.splice(idx, 1, updatedProject);
-    this._saveToLocalStorage(DATAPOINTS.PROJECTS, projects);
+    this._saveToLocalStorage("projects", projects);
   }
 
   setFurniturePosition(id: string, x: number, y: number) {
+    if (!this._state.currentProject || !this._state.projects) return;
     const moveX = Math.round(x);
     const moveY = Math.round(y);
     const newItems = [...this._state.currentProject.furnitures];
@@ -196,7 +214,7 @@ export class Store {
       y: newItems[index].y + moveY,
     };
     this._state.rooms = newItems;
-    this._saveToLocalStorage(DATAPOINTS.ROOMS, this._state.rooms);
+    this._saveToLocalStorage("roomlyRooms", this._state.rooms);
     this._triggerCallbacks();
   }
 
@@ -211,19 +229,30 @@ export class Store {
     return { calculatedX: calculatedX, calculatedY: calculatedY };
   }
 
-  createProject({ title }) {
+  createProject({ title }: { title: string }) {
     const newId = uuidv4();
     this._state.projects.push(new Project(newId, title, Date()));
-    this._saveToLocalStorage(DATAPOINTS.PROJECTS, this._state.projects);
+    this._saveToLocalStorage("projects", this._state.projects);
   }
 
-  deleteProject({ id }) {
+  deleteProject(id: string) {
     const idx = this._state.projects.findIndex((project) => project.id === id);
     this._state.projects.splice(idx, 1);
-    this._saveToLocalStorage(DATAPOINTS.PROJECTS, this._state.projects);
+    this._saveToLocalStorage("projects", this._state.projects);
   }
 
-  createFurniture({ title, color, width, height }) {
+  createFurniture({
+    title,
+    color,
+    width,
+    height,
+  }: {
+    title: string;
+    color: string;
+    width: number;
+    height: number;
+  }) {
+    if (!this._state.currentProject) return;
     let furnitures = this._state.currentProject.furnitures || [];
     const newId = uuidv4();
     furnitures.push(
@@ -245,7 +274,15 @@ export class Store {
     this._triggerCallbacks();
   }
 
-  createRoom({ title, width, height }) {
+  createRoom({
+    title,
+    width,
+    height,
+  }: {
+    title: string;
+    width: number;
+    height: number;
+  }) {
     let rooms = this._state.rooms;
     const newId = uuidv4();
     rooms.push(
@@ -260,7 +297,7 @@ export class Store {
       })
     );
     this._state.showInputBox = false;
-    this._saveToLocalStorage(DATAPOINTS.ROOMS, this._state.rooms);
+    this._saveToLocalStorage("roomlyRooms", this._state.rooms);
     this._triggerCallbacks();
   }
 

@@ -5,14 +5,15 @@ import DataOverlay from "./components/DataOverlay";
 import Menu from "./components/Menu";
 import Hammer from "hammerjs";
 import RightBar from "./components/RightBar.jsx";
+import { Store } from "./store.js";
 import "./styling/App.scss";
 import "./styling/normalize.scss";
 import "./styling/bars.scss";
 
-function App({ store }) {
+function App({ store }: { store: Store }) {
   const [storeState, setStoreState] = useState(store.getState());
   const viewport = useRef(null);
-  const statusBar = useRef(null);
+  const statusBarRef = useRef<HTMLDivElement>(null);
   let [menuActive, setMenuActive] = useState(true);
 
   useEffect(() => {
@@ -27,12 +28,10 @@ function App({ store }) {
 
       mc.add(new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }));
 
-      mc.on("pan", handleDrag);
-
       var lastPosX = 0;
       var lastPosY = 0;
       var isDragging = false;
-      function handleDrag(ev) {
+      const handleDrag = (ev: any) => {
         var elem = ev.target;
 
         if (ev.srcEvent.target.id === "camera") {
@@ -60,18 +59,22 @@ function App({ store }) {
             setStatus("End Moving Viewport");
           }
         }
-      }
+      };
 
-      function setStatus(msg) {
-        statusBar.current.textContent = msg;
-      }
+      const setStatus = (msg: string) => {
+        if (statusBarRef?.current?.textContent) {
+          statusBarRef.current.textContent = msg;
+        }
+      };
+
+      mc.on("pan", handleDrag);
     }
   });
 
   return (
     <div className="App">
       {store._state.showInputBox ? <Overlay store={store} /> : null}
-      <div id="status" ref={statusBar}>
+      <div id="status" ref={statusBarRef}>
         Status
       </div>
       <RightBar store={store} storeState={storeState}></RightBar>

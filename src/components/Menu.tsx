@@ -1,6 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Store } from "../store";
 
-const ProjectItem = ({ id, title, lastEdited, loadProject, deleteProject }) => {
+const ProjectItem = ({
+  id,
+  title,
+  lastEdited,
+  loadProject,
+  deleteProject,
+}: {
+  id: string;
+  title: string;
+  lastEdited: string;
+  loadProject: (arg0: string) => void;
+  deleteProject: (arg0: string) => void;
+}) => {
   return (
     <li className="project-item">
       <button className="title-container" onClick={() => loadProject(id)}>
@@ -10,14 +23,20 @@ const ProjectItem = ({ id, title, lastEdited, loadProject, deleteProject }) => {
       <button className="download">
         <i className="fas fa-download"></i>
       </button>
-      <button className="trash" onClick={() => deleteProject({ id })}>
+      <button className="trash" onClick={() => deleteProject(id)}>
         <i className="fas fa-trash"></i>
       </button>
     </li>
   );
 };
 
-const Menu = ({ store, setMenuActive }) => {
+const Menu = ({
+  store,
+  setMenuActive,
+}: {
+  store: Store;
+  setMenuActive: (arg0: boolean) => void;
+}) => {
   let [title, setTitle] = useState("");
   let [createNewMode, setCreateNewMode] = useState(false);
   let [projects, setProjects] = useState(store._state.projects || []);
