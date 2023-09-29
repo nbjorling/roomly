@@ -12,7 +12,7 @@ import "./styling/bars.scss";
 
 function App({ store }: { store: Store }) {
   const [storeState, setStoreState] = useState(store.getState());
-  const viewport = useRef(null);
+  const viewport = useRef<HTMLDivElement>(null);
   const statusBarRef = useRef<HTMLDivElement>(null);
   let [menuActive, setMenuActive] = useState(true);
 

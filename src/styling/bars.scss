@@ -30,9 +30,23 @@ $bar-width: 50px;
     .furniture-list {
       .furniture {
         background: white;
+        height: 30px;
         border-radius: 2px;
         padding: 4px;
-        margin-bottom: 2px;
+        margin-bottom: 4px;
+        border-radius: 8px;
+        transition: height 1s;
+        overflow: hidden;
+        cursor: pointer;
+
+        &.selected {
+          height: 58px;
+          border: 2px solid orange;
+        }
+
+        .paragraph {
+          margin-top: 4px;
+        }
       }
     }
   }

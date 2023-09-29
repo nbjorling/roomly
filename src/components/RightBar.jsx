@@ -1,26 +1,28 @@
 import React from "react";
 
-const Furniture = ({ furniture, selected }) => {
+const Furniture = ({ onClick, furniture, selected }) => {
   return (
     <>
       {selected ? (
-        <div className="furniture">
+        <div className="furniture selected">
           <div>{furniture.title}</div>
-          <div>
-            Position X : {furniture.x}
+          <div className="paragraph">
+            Position X : {furniture.x} <br />
             Position Y : {furniture.y}
           </div>
         </div>
       ) : (
-        <div className="furniture">{furniture.title}</div>
+        <div className="furniture" onClick={onClick}>
+          {furniture.title}
+        </div>
       )}
     </>
   );
 };
 
 const RightBar = ({ store, storeState }) => {
-  let furnitures = store._state?.currentProject?.furnitures;
-  console.log("Koca: furnitures ", storeState);
+  console.log("Koca: storeState ", storeState);
+  let furnitures = storeState?.currentProject?.furnitures;
 
   return (
     <div className="bar-container bar-container--right">
@@ -32,11 +34,13 @@ const RightBar = ({ store, storeState }) => {
             if (furniture.title)
               return (
                 <Furniture
+                  onClick={() => store.selectItem(furniture.id)}
                   key={furniture.id}
                   furniture={furniture}
-                  selected={true}
+                  selected={furniture.id === storeState.selectedItem}
                 />
               );
+            return null;
           })}
         </div>
       </div>

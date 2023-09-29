@@ -162,7 +162,10 @@ export class Store {
   }
 
   _getFromLocalStorate(datapoint: DATAPOINTS) {
-    return JSON.parse(localStorage.getItem(datapoint) || "");
+    return (
+      localStorage.getItem(datapoint) &&
+      JSON.parse(localStorage.getItem(datapoint) || "")
+    );
   }
 
   loadProject(id: string) {

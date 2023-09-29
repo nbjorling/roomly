@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom";
-import App from "./App.js";
+import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Store } from "./store";
 
